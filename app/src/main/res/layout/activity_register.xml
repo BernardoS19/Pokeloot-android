@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:padding="5dp"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".vistas.RegisterActivity">
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2"/>
+        android:layout_weight="3" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2" />
+        android:layout_weight="2"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,12 +29,13 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvRegisto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Criar uma Conta"
             android:textAlignment="center"
             android:textSize="30dp" />
-
+        
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp" />
@@ -48,13 +49,31 @@
             app:boxStrokeWidthFocused="0dp"
             app:startIconDrawable="@drawable/ic_input_username"
             app:startIconTint="@color/yellow">
-            
+
             <EditText
-                android:id="@+id/etUsername"
+                android:id="@+id/etRegistoUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_input_border"
                 android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:hint="Email"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:startIconDrawable="@drawable/ic_input_email"
+            app:startIconTint="@color/yellow">
+
+            <EditText
+                android:id="@+id/etRegistoEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_input_border"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -70,7 +89,7 @@
             app:startIconTint="@color/yellow">
 
             <EditText
-                android:id="@+id/etPassword"
+                android:id="@+id/etRegistoPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_input_border"
@@ -82,21 +101,14 @@
             android:layout_height="10dp" />
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnCriarConta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Login"
-            android:onClick="onClickLogin" />
+            android:text="Registar"
+            android:onClick="onClickCriarConta" />
+
     </LinearLayout>
-    
-    <TextView
-        android:id="@+id/tvRedirectCriarConta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:textAlignment="center"
-        android:text="Não tem conta? Registe-se aqui." />
 
     <Space
         android:layout_width="match_parent"
