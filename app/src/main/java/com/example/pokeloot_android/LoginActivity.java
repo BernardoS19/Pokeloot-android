@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.pokeloot_android.vistas.MenuActivity;
 import com.example.pokeloot_android.vistas.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -45,5 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClickLogin(View view) {
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
+
     }
 }

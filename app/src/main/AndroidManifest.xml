@@ -10,14 +10,12 @@
         android:label="PokéLoot"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Pokelootandroid"
+        android:theme="@style/Theme.Pokeloot"
         tools:targetApi="31">
         <activity
-            android:name=".MenuActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:name=".vistas.MenuActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Pokeloot.NoActionBar">
         </activity>
         <activity
             android:name=".vistas.RegisterActivity"
