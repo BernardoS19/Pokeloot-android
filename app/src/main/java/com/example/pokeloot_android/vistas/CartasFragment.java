@@ -1,16 +1,25 @@
 package com.example.pokeloot_android.vistas;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.viewmodel.CreationExtras;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.pokeloot_android.R;
 import com.example.pokeloot_android.adaptadores.GridCartasAdaptador;
+import com.example.pokeloot_android.modelos.Carta;
+import com.example.pokeloot_android.modelos.SingletonCartas;
+
+import java.util.ArrayList;
 
 public class CartasFragment extends Fragment {
 
@@ -30,12 +39,22 @@ public class CartasFragment extends Fragment {
 
         gridViewCartas = view.findViewById(R.id.gridCartas);
 
-        String[] cartaNome = {"carta_teste", "carta_teste", "carta_teste", "carta_teste", "carta_teste"};
-        int[] cartaImagens = {R.drawable.carta_teste, R.drawable.carta_teste, R.drawable.carta_teste, R.drawable.carta_teste, R.drawable.carta_teste};
-
-        GridCartasAdaptador gridCartasAdaptador = new GridCartasAdaptador(this.getContext(), cartaNome, cartaImagens);
-        gridViewCartas.setAdapter(gridCartasAdaptador);
+        SharedPreferences preferences = getContext().getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        String authkey = preferences.getString("AUTH_KEY", null);
+        if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
+            SingletonCartas.getInstance(getContext()).setCartaListener(this::onRefreshGridCarta);
+            SingletonCartas.getInstance(getContext()).getCartasCompradasAPI(getContext());
+        } else {
+            Toast.makeText(getContext(), "Erro. Autenticação não reconhecida.", Toast.LENGTH_SHORT).show();
+        }
 
         return view;
     }
+
+    public void onRefreshGridCarta(ArrayList<Carta> arrayCartas) {
+        if (arrayCartas != null) {
+            gridViewCartas.setAdapter(new GridCartasAdaptador(getContext(), arrayCartas));
+        }
+    }
+
 }

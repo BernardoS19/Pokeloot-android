@@ -3,10 +3,11 @@
     <color name="purple_200">#FFAB0C</color>
     <color name="purple_500">#FFFAB713</color>
     <color name="purple_700">#FFB43A</color>
-    <color name="blue_200">#30a7d7</color>
-    <color name="blue_700">#1b53ba</color>
+    <color name="blue_200">#378EDB</color>
+    <color name="blue_700">#074F8F</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="yellow">#FFFAB713</color>
+    <color name="yellow2">#ffebc9</color>
     <color name="blue">#30a7d7</color>
 </resources>

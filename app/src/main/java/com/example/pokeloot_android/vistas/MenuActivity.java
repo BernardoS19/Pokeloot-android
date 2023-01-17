@@ -65,6 +65,16 @@ public class MenuActivity extends AppCompatActivity {
                 toolbar.setTitle("Minhas Cartas");
                 drawer.closeDrawer(GravityCompat.START);
                 break;
+            case R.id.navBaralhos:
+                fragment = new BaralhosFragment();
+                toolbar.setTitle("Meus Baralhos");
+                drawer.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.navEventos:
+                fragment = new EventosFragment();
+                toolbar.setTitle("Eventos");
+                drawer.closeDrawer(GravityCompat.START);
+                break;
         }
         if (fragment!=null)
             fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();

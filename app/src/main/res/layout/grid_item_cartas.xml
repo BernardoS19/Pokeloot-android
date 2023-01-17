@@ -8,13 +8,13 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/imgCarta"
+        android:id="@+id/imgGridCarta"
         android:layout_width="200dp"
         android:layout_height="250dp"
         app:srcCompat="@drawable/carta_teste" />
 
     <TextView
-        android:id="@+id/tvCartaNome"
+        android:id="@+id/tvGridCartaNome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"

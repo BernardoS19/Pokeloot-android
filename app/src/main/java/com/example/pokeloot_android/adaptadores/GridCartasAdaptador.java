@@ -1,6 +1,9 @@
 package com.example.pokeloot_android.adaptadores;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,37 +11,40 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.pokeloot_android.R;
+import com.example.pokeloot_android.modelos.Carta;
+
+import java.util.ArrayList;
 
 public class GridCartasAdaptador extends BaseAdapter {
 
     private Context context;
-    private String[] cartaNome;
-    private int[] imagem;
+
+    private ArrayList<Carta> cartas;
 
     private LayoutInflater inflater;
 
-    public GridCartasAdaptador(Context context, String[] cartaNome, int[] imagem)
-    {
+    public GridCartasAdaptador(Context context, ArrayList<Carta> cartas) {
         this.context = context;
-        this.imagem = imagem;
-        this.cartaNome = cartaNome;
+        this.cartas = cartas;
     }
 
 
     @Override
     public int getCount() {
-        return cartaNome.length;
+        return cartas.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return cartas.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return cartas.get(i).getId();
     }
 
     @Override
@@ -50,12 +56,32 @@ public class GridCartasAdaptador extends BaseAdapter {
             view = inflater.inflate(R.layout.grid_item_cartas, null);
         }
 
-        ImageView imageView = view.findViewById(R.id.imgCarta);
-        TextView textView = view.findViewById(R.id.tvCartaNome);
+        ViewHolderGridCarta viewHolder = (ViewHolderGridCarta) view.getTag();
+        if (viewHolder == null) {
+            viewHolder = new ViewHolderGridCarta(view);
+            view.setTag(viewHolder);
+        }
 
-        imageView.setImageResource(imagem[i]);
-        textView.setText(cartaNome[i]);
+        viewHolder.update(cartas.get(i));
 
         return view;
+    }
+
+    public class ViewHolderGridCarta{
+        private TextView tvCartaNome;
+        private ImageView imgCarta;
+
+        public ViewHolderGridCarta(View view) {
+            tvCartaNome = view.findViewById(R.id.tvGridCartaNome);
+            imgCarta = view.findViewById(R.id.imgGridCarta);
+        }
+
+        public void update(Carta carta) {
+            byte[] decodedString = Base64.decode(carta.getImagem(), Base64.DEFAULT);
+            Bitmap decodedImage = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+            tvCartaNome.setText(carta.getNome());
+            imgCarta.setImageBitmap(decodedImage);
+        }
     }
 }
