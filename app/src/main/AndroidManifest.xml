@@ -17,10 +17,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".vistas.DetalhesCartaActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:exported="false"
+            android:parentActivityName=".vistas.MenuActivity">
         </activity>
         <activity
             android:name=".vistas.MenuActivity"

@@ -1,6 +1,7 @@
 package com.example.pokeloot_android.vistas;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import androidx.lifecycle.viewmodel.CreationExtras;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -47,6 +49,15 @@ public class CartasFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "Erro. Autenticação não reconhecida.", Toast.LENGTH_SHORT).show();
         }
+
+        gridViewCartas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                Intent intent = new Intent(getContext(), DetalhesCartaActivity.class);
+                intent.putExtra("carta_id", (int) id);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

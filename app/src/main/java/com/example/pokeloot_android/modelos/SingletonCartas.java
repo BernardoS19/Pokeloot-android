@@ -66,6 +66,16 @@ public class SingletonCartas {
 
     //endregion
 
+    //Aceder aos detalhes de uma Carta a partir do id
+    public Carta getCarta(int id) {
+        for (Carta carta : cartas) {
+            if (carta.getId() == id) {
+                return carta;
+            }
+        }
+        return null;
+    }
+
     //region Acesso API
 
     //region LOGIN
