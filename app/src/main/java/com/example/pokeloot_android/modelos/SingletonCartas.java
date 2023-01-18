@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.pokeloot_android.listeners.BaralhoListener;
 import com.example.pokeloot_android.listeners.CartaListener;
+import com.example.pokeloot_android.listeners.EventoListener;
 import com.example.pokeloot_android.listeners.LoginListener;
 import com.example.pokeloot_android.utils.CartasJsonParser;
 
@@ -29,6 +30,7 @@ public class SingletonCartas {
     private static RequestQueue volleyQueue = null;
     private ArrayList<Carta> cartas;
     private ArrayList<Baralho> baralhos;
+    private Evento evento;
     private String auth_key;
     private static final String urlAPILogin = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/user/login";
     private static final String urlAPIRegister = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/user/register";
@@ -37,6 +39,8 @@ public class SingletonCartas {
     private CartaListener cartaListener;
     private static final String urlAPIBaralhosDoUser = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/lista";
     private BaralhoListener baralhoListener;
+    private static final String urlAPIEventoProximo = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/evento/proximo";
+    private EventoListener eventoListener;
 
     public static synchronized SingletonCartas getInstance(Context context) {
         if (instance == null) {
@@ -62,6 +66,10 @@ public class SingletonCartas {
 
     public void setBaralhoListener(BaralhoListener baralhoListener) {
         this.baralhoListener = baralhoListener;
+    }
+
+    public void setEventoListener(EventoListener eventoListener) {
+        this.eventoListener = eventoListener;
     }
 
     //endregion
@@ -179,8 +187,7 @@ public class SingletonCartas {
     }
     //endregion
 
-
-    //Region Baralhos do Utilizador
+    //region Baralhos do Utilizador
     public void getBaralhosDoUserAPI(final Context context) {
         if (!CartasJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à Internet", Toast.LENGTH_SHORT).show();
@@ -215,6 +222,45 @@ public class SingletonCartas {
             volleyQueue.add(request);
         }
     }
+    //endregion
+
+
+    //region Evento
+    public void getEventoAPI(final Context context) {
+        if (!CartasJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, urlAPIEventoProximo, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    evento = CartasJsonParser.parserJsonEvento(response);
+                    if (evento != null) {
+                        eventoListener.onRefreshEvento(evento);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+                    String authkey = preferences.getString("AUTH_KEY", null);
+                    if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
+                        headers.put("auth", authkey);
+                        return headers;
+                    } else {
+                        return null;
+                    }
+                }
+            };
+            volleyQueue.add(request);
+        }
+    }
+    //endregion
 
     //endregion
 

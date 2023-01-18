@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.example.pokeloot_android.modelos.Baralho;
 import com.example.pokeloot_android.modelos.Carta;
+import com.example.pokeloot_android.modelos.Evento;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +76,23 @@ public class CartasJsonParser {
         return baralhos;
     }
 
+
+    //receber evento
+    public static Evento parserJsonEvento(JSONObject response) {
+        try {
+            int id = response.getInt("id");
+            String descricao = response.getString("descricao");
+            String data = response.getString("data");
+            String latitude = response.getString("latitude");
+            String longitude = response.getString("longitude");
+
+            Evento auxEvento = new Evento(id, descricao, data, latitude, longitude);
+            return auxEvento;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }
