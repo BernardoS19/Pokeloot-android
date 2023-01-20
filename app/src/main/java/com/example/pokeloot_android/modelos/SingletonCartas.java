@@ -38,6 +38,7 @@ public class SingletonCartas {
     private static final String urlAPICartasCompradas = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/carta/compradas";
     private CartaListener cartaListener;
     private static final String urlAPIBaralhosDoUser = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/lista";
+    private static final String urlAPICriarBaralho = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/novo";
     private BaralhoListener baralhoListener;
     private static final String urlAPIEventoProximo = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/evento/proximo";
     private EventoListener eventoListener;
@@ -224,6 +225,42 @@ public class SingletonCartas {
     }
     //endregion
 
+    //region Criar Baralho
+    public void createBaralhoAPI(final String nome, final Context context) {
+        if (!CartasJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("nome", nome);
+            JSONObject jsonObject = new JSONObject(params);
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, urlAPICriarBaralho, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+                    String authkey = preferences.getString("AUTH_KEY", null);
+                    if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
+                        headers.put("auth", authkey);
+                        return headers;
+                    } else {
+                        return null;
+                    }
+                }
+            };
+            volleyQueue.add(request);
+        }
+    }
+    //endregion
 
     //region Evento
     public void getEventoAPI(final Context context) {
