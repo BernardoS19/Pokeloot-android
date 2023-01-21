@@ -27,7 +27,6 @@ public class CartasFragment extends Fragment {
 
     private GridView gridViewCartas;
 
-
     public CartasFragment() {
         // Required empty public constructor
     }

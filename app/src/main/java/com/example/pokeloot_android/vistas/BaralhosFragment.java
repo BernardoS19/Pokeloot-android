@@ -3,6 +3,8 @@ package com.example.pokeloot_android.vistas;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -41,6 +44,8 @@ public class BaralhosFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_baralhos, container, false);
 
+        setHasOptionsMenu(true);
+
         lvListaBaralhos = view.findViewById(R.id.lvListaBaralhos);
 
         fabCriarBaralho = view.findViewById(R.id.fabCriarBaralho);
@@ -61,7 +66,23 @@ public class BaralhosFragment extends Fragment {
             }
         });
 
+        lvListaBaralhos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                Intent intent = new Intent(getContext(), DetalhesBaralhoActivity.class);
+                intent.putExtra("baralho_id", (int) id);
+                startActivity(intent);
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SingletonCartas.getInstance(getContext()).setBaralhoListener(this::onRefreshListaBaralho);
+        SingletonCartas.getInstance(getContext()).getBaralhosDoUserAPI(getContext());
     }
 
     public void onRefreshListaBaralho(ArrayList<Baralho> listaBaralho) {
@@ -104,6 +125,8 @@ public class BaralhosFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+
+
     }
 
 }

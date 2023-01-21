@@ -30,6 +30,7 @@ public class SingletonCartas {
     private static RequestQueue volleyQueue = null;
     private ArrayList<Carta> cartas;
     private ArrayList<Baralho> baralhos;
+    private ArrayList<Carta> cartasBaralho;
     private Evento evento;
     private String auth_key;
     private static final String urlAPILogin = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/user/login";
@@ -39,6 +40,9 @@ public class SingletonCartas {
     private CartaListener cartaListener;
     private static final String urlAPIBaralhosDoUser = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/lista";
     private static final String urlAPICriarBaralho = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/novo";
+    private static final String urlAPIEditarBaralho = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/editar";
+    private static final String urlAPIRemoverBaralho = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/remover";
+    private static final String urlAPICartasBaralho = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/baralho/cartas";
     private BaralhoListener baralhoListener;
     private static final String urlAPIEventoProximo = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/evento/proximo";
     private EventoListener eventoListener;
@@ -80,6 +84,16 @@ public class SingletonCartas {
         for (Carta carta : cartas) {
             if (carta.getId() == id) {
                 return carta;
+            }
+        }
+        return null;
+    }
+
+    //Aceder aos detalhes de um Baralho a partir do id
+    public Baralho getBaralho(int id) {
+        for (Baralho baralho : baralhos) {
+            if (baralho.getId() == id) {
+                return baralho;
             }
         }
         return null;
@@ -251,6 +265,120 @@ public class SingletonCartas {
                     String authkey = preferences.getString("AUTH_KEY", null);
                     if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
                         headers.put("auth", authkey);
+                        return headers;
+                    } else {
+                        return null;
+                    }
+                }
+            };
+            volleyQueue.add(request);
+        }
+    }
+    //endregion
+
+    //region Editar Baralho
+    public void updateBaralhoAPI(final int id, final String nome, final Context context) {
+        if (!CartasJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("id", id);
+            params.put("nome", nome);
+            JSONObject jsonObject = new JSONObject(params);
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, urlAPIEditarBaralho, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+                    String authkey = preferences.getString("AUTH_KEY", null);
+                    if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
+                        headers.put("auth", authkey);
+                        return headers;
+                    } else {
+                        return null;
+                    }
+                }
+            };
+            volleyQueue.add(request);
+        }
+    }
+    //endregion
+
+    //region Eliminar Baralho
+    public void deleteBaralhoAPI(final int id, final Context context) {
+        if (!CartasJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("id", id);
+            JSONObject jsonObject = new JSONObject(params);
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, urlAPIRemoverBaralho, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+                    String authkey = preferences.getString("AUTH_KEY", null);
+                    if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
+                        headers.put("auth", authkey);
+                        return headers;
+                    } else {
+                        return null;
+                    }
+                }
+            };
+            volleyQueue.add(request);
+        }
+    }
+    //endregion
+
+    //region Cartas de um Baralho
+    public void getCartasDoBaralhoAPI(final int id, final Context context) {
+        if (!CartasJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlAPICartasBaralho, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    cartasBaralho = CartasJsonParser.parserJsonCartas(response);
+                    if (cartasBaralho != null) {
+                        if (cartaListener != null) {
+                            cartaListener.onRefreshGridCarta(cartasBaralho);
+                        }
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+                    String authkey = preferences.getString("AUTH_KEY", null);
+                    if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
+                        headers.put("auth", authkey);
+                        headers.put("baralhoId", String.valueOf(id));
                         return headers;
                     } else {
                         return null;
