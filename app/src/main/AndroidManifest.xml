@@ -17,9 +17,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".vistas.DetalhesBaralhoActivity"
+            android:name=".vistas.GerirCartasActivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".vistas.DetalhesBaralhoActivity"
+            android:exported="false"></activity>
         <activity
             android:name=".vistas.DetalhesCartaActivity"
             android:exported="false"

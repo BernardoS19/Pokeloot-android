@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.example.pokeloot_android.modelos.Baralho;
+import com.example.pokeloot_android.modelos.BaralhoCarta;
 import com.example.pokeloot_android.modelos.Carta;
 import com.example.pokeloot_android.modelos.Evento;
 
@@ -76,6 +77,24 @@ public class CartasJsonParser {
         return baralhos;
     }
 
+    //receber cartas para colocar ou retirar do baralho
+    public static ArrayList<BaralhoCarta> parserJsonGerirCartas(JSONArray response) {
+        ArrayList<BaralhoCarta> cartas = new ArrayList<>();
+        try {
+            for (int i = 0; i<response.length(); i++) {
+                JSONObject carta = (JSONObject) response.get(i);
+                int id = carta.getInt("id");
+                String imagem = carta.getString("imagem");
+                String nome = carta.getString("nome");
+                int adicionado = carta.getInt("adicionado");
+                BaralhoCarta auxBaralhoCarta = new BaralhoCarta(id, imagem, nome, adicionado);
+                cartas.add(auxBaralhoCarta);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cartas;
+    }
 
     //receber evento
     public static Evento parserJsonEvento(JSONObject response) {

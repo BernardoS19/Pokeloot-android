@@ -2,6 +2,7 @@ package com.example.pokeloot_android.vistas;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -73,7 +74,10 @@ public class DetalhesBaralhoActivity extends AppCompatActivity {
         fabAdicionarCarta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(DetalhesBaralhoActivity.this, "Add Carta", Toast.LENGTH_SHORT).show();
+                //TODO abrir activity gerir cartas e enviar o id do baralho para lá
+                Intent intentGerirCartas = new Intent(DetalhesBaralhoActivity.this, GerirCartasActivity.class);
+                intentGerirCartas.putExtra("baralhoId", baralhoId);
+                startActivity(intentGerirCartas);
             }
         });
 
@@ -106,6 +110,13 @@ public class DetalhesBaralhoActivity extends AppCompatActivity {
         if (arrayCartas != null) {
             gridViewCartas.setAdapter(new GridCartasAdaptador(getApplicationContext(), arrayCartas));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SingletonCartas.getInstance(getApplicationContext()).setCartaListener(this::onRefreshGridCarta);
+        SingletonCartas.getInstance(getApplicationContext()).getCartasDoBaralhoAPI(baralhoId, getApplicationContext());
     }
 
     private void showDialogEditar() {
