@@ -51,6 +51,7 @@ public class SingletonCartas {
     private BaralhoListener baralhoListener;
     private BaralhoCartaListener baralhoCartaListener;
     private static final String urlAPIEventoProximo = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/evento/proximo";
+    private static final String urlAPIgetCartaQRCode = "http://10.0.2.2/PokeLoot-PLSI/backend/web/api/evento/resgatar_carta";
     private EventoListener eventoListener;
 
     public static synchronized SingletonCartas getInstance(Context context) {
@@ -452,7 +453,6 @@ public class SingletonCartas {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, urlAPIAdicionarCartaBaralho, jsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -528,6 +528,43 @@ public class SingletonCartas {
                     if (evento != null) {
                         eventoListener.onRefreshEvento(evento);
                     }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+                    String authkey = preferences.getString("AUTH_KEY", null);
+                    if (authkey != "Error, username or password may be wrong." && authkey != null && authkey != "null") {
+                        headers.put("auth", authkey);
+                        return headers;
+                    } else {
+                        return null;
+                    }
+                }
+            };
+            volleyQueue.add(request);
+        }
+    }
+    //endregion
+
+    //region Ler QRCode e receber Carta
+    public void getCartaPorQRCodeAPI(final int idCarta, final Context context) {
+        if (!CartasJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("idCarta", idCarta);
+            JSONObject jsonObject = new JSONObject(params);
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, urlAPIgetCartaQRCode, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
                 }
             }, new Response.ErrorListener() {
                 @Override
