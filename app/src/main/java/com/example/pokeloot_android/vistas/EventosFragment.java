@@ -27,6 +27,8 @@ public class EventosFragment extends Fragment {
 
     private TextView tvData, tvDescricao;
 
+    private String eventoLatitude, eventoLongitude;
+
     private Button btnQRCode, btnMaps;
 
     public EventosFragment() {
@@ -56,6 +58,16 @@ public class EventosFragment extends Fragment {
             }
         });
 
+        btnMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MapaActivity.class);
+                intent.putExtra("latitude", eventoLatitude);
+                intent.putExtra("longitude", eventoLongitude);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -70,6 +82,8 @@ public class EventosFragment extends Fragment {
         if (evento != null) {
             tvData.setText(evento.getData());
             tvDescricao.setText(evento.getDescricao());
+            eventoLatitude = evento.getLatitude();
+            eventoLongitude = evento.getLongitude();
         }
     }
 
